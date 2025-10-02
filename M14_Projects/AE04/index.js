@@ -1,126 +1,117 @@
-// AE04/index.js
-import express from 'express';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import express from "express";
+import fs from "fs"; //treballar amb arxius
+import bodyParser from "body-parser"; //Ho afegim per entendre que estem rebent un json des de la petició post.
 
-// __dirname para ESM
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// --- App ---
+//Creo l'objecte de l'aplicació
 const app = express();
-
-// --- Settings ---
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-
-// --- Middlewares ---
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
-
-// --- Utilidades de datos (sync) ---
-const DB_PATH = path.join(__dirname, 'db.json');
+app.use(bodyParser.json());
+app.use(express.static("public"));//carpeta publica pel css
+app.set('view engine','ejs');//Fem servir el motor ejs
+app.set('views', './views'); //carpeta on desem els arxius .ejs
 
 const readData = () => {
-  try {
-    if (!fs.existsSync(DB_PATH)) fs.writeFileSync(DB_PATH, JSON.stringify({ books: [] }, null, 2));
-    const raw = fs.readFileSync(DB_PATH, 'utf8');
-    return JSON.parse(raw);
-  } catch (err) {
-    console.error('readData error:', err);
-    return { books: [] };
-  }
-};
+    try {
+        const data = fs.readFileSync("./db.json");
+        //console.log(data);
+        //console.log(JSON.parse(data));
+        return JSON.parse(data)
 
+    } catch (error) {
+        console.log(error);
+    }
+};
+//Funció per escriure informació
 const writeData = (data) => {
-  try {
-    fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
-  } catch (err) {
-    console.error('writeData error:', err);
-  }
+    try {
+        fs.writeFileSync("./db.json", JSON.stringify(data));
+
+    } catch (error) {
+        console.log(error);
+    }
 };
+//Funció per llegir la informació
+//readData();
 
-// --- Rutas ---
-app.get('/', (_req, res) => {
-  res.send('Welcome to my first API with Node.js :)');
+app.get("/", (req, res) => {
+    res.send("Welcome to my first API with Node.js :)");
 });
 
-// Render de productos con EJS
-app.get("/books", (req, res) => {
-    const data = readData();
-
-    const user = { name: "Marti Vilas" };
-    const htmlMessage = `
+//Creem un endpoint per obtenir tots els llibres
+app.get("/productes", (req, res) => {
+  const user = { name: "Martí" };
+  const htmlMessage = `
     <p>Aquest és un text <strong>amb estil</strong> i un enllaç:</p>
-    <a href="https://www.example.com">Visita Example</a>`;
-
-    // Només cridem res.render
-    res.render("books", { user, data, htmlMessage });
-});
-
-// --- API Books ---
-app.get('/books', (_req, res) => {
+    <a href="https://www.example.com">Visita Example</a>
+  `;
   const data = readData();
-  return res.json(data.books);
+  res.render("productes", { user, data, htmlMessage });
 });
 
-app.get('/books/:id', (req, res) => {
-  const data = readData();
-  const id = Number(req.params.id);
-  const book = data.books.find((b) => b.id === id);
-  if (!book) return res.status(404).json({ error: 'Book not found' });
-  return res.json(book);
+//Creem un endpoint per obtenir un llibre per un id
+app.get("/books/:id", (req, res) => {
+    const data = readData();
+    //Extraiem l'id de l'url recordem que req es un objecte tipus requets
+    // que conté l'atribut params i el podem consultar
+    const id = parseInt(req.params.id);
+    const book = data.books.find((book) => book.id === id);
+    res.json(book);
 });
 
-app.post('/books', (req, res) => {
-  const data = readData();
-  const { name, ...rest } = req.body || {};
 
-  if (!name || String(name).trim() === '') {
-    return res.status(400).json({ error: 'Field "name" is required' });
-  }
-
-  // Duplicado case-insensitive por nombre
-  const exists = data.books.some((b) => b.name?.toLowerCase() === name.toLowerCase());
-  if (exists) {
-    return res.status(400).json({ error: 'El llibre ja existeix' });
-  }
-
-  const nextId = data.books.length ? Math.max(...data.books.map((b) => b.id)) + 1 : 1;
-
-  const newBook = { id: nextId, name, ...rest };
-  data.books.push(newBook);
-  writeData(data);
-  return res.status(201).json(newBook);
+//Creem un endpoint del tipus post per afegir un llibre
+app.post("/books", (req, res) => {
+    const data = readData();
+    const body = req.body;
+    const { name } = body;
+    console.log("Títol llibre: ", name);
+//todo lo que viene en ...body se agrega al nuevo libro    
+    const trobat = data.books.find((book) => book.name === name);
+    if(!trobat){
+      console.log('No existeix');
+      const newBook = {
+        id: data.books.length + 1,
+        ...body, //! operador de propagació o còpia
+      };
+      data.books.push(newBook);
+      writeData(data);
+      res.json(newBook);
+    }else{
+      console.log('Existeix');
+      return res.status(400).json("Aquest llibre ja existeix");
+    }
+      
 });
 
-app.put('/books/:id', (req, res) => {
-  const data = readData();
-  const id = Number(req.params.id);
-  const idx = data.books.findIndex((b) => b.id === id);
-  if (idx === -1) return res.status(404).json({ error: 'Book not found' });
 
-  const updated = { ...data.books[idx], ...req.body, id }; // preserva id
-  data.books[idx] = updated;
-  writeData(data);
-  return res.json({ message: 'Book updated successfully', book: updated });
+//Creem un endpoint per modificar un llibre
+app.put("/books/:id", (req, res) => {
+    const data = readData();
+    const body = req.body;
+    const id = parseInt(req.params.id);
+    const bookIndex = data.books.findIndex((book) => book.id === id);
+    data.books[bookIndex] = { // ... fa una còpia superficial, sobreescriu els valors que tenen en comú, i també deixa els que no tenen en comú ()
+        ...data.books[bookIndex],
+        ...body,
+    };
+    writeData(data);
+    res.json({ message: "Book updated successfully" });
 });
 
-app.delete('/books/:id', (req, res) => {
-  const data = readData();
-  const id = Number(req.params.id);
-  const idx = data.books.findIndex((b) => b.id === id);
-  if (idx === -1) return res.status(404).json({ error: 'Book not found' });
 
-  data.books.splice(idx, 1);
-  writeData(data);
-  return res.json({ message: 'Book deleted successfully' });
+//Creem un endpoint per eliminar un llibre
+app.delete("/books/:id", (req, res) => {
+    const data = readData();
+    const id = parseInt(req.params.id);
+    const bookIndex = data.books.findIndex((book) => book.id === id);
+    //splice esborra a partir de bookIndex, el número de elements 
+    // que li indiqui al segon argument, en aquest cas 1
+    data.books.splice(bookIndex, 1);
+    writeData(data);
+    res.json({ message: "Book deleted successfully" });
 });
 
-// --- Server ---
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`✅ Server listening on http://localhost:${PORT}`);
+
+//Funció per escoltar
+app.listen(3000, () => {
+    console.log("Server listing on port 3000 - http://localhost:3000");
 });
