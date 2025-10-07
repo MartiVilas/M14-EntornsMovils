@@ -7,6 +7,8 @@ const app = express();
 app.use(express.json());
 app.use(express.static("public"));
 
+app.listen(PORT, () => console.log(`Obert en el port ${PORT}`));
+
 app.set("view engine", "ejs");
 app.set("views", "./views");
 
