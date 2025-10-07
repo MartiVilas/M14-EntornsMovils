@@ -1,24 +1,27 @@
-import express from 'express';
-import {PORT, SECRET_JWT_KEY} from './config.js';
+import express from "express";
+import { PORT, SECRET_JWT_KEY } from "./config.js";
+import { UserRepository } from "./user-repository.js";
 
 const app = express();
 
 app.use(express.json());
 app.use(express.static("public"));
 
-app.set('view engine', 'ejs');
-app.set('views', './views');
+app.set("view engine", "ejs");
+app.set("views", "./views");
 
-app.listen(PORT,() => console.log(`Abierto en el puerto ${PORT}`))
-
-// Inici dels enpoints
-
-app.get('/', (req, res) => { 
-   res.render('register') 
+app.get("/", (req, res) => {
+  //const {user} = req.session
+  res.render("register");
 });
 
-app.post('/register', (req, res) => {
-   // desestructurar del body lo que queremos usar
-    const {username, password} = req.body;
-    
+app.post("/register", async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const id = await UserRepository.create({ username, password });
+    res.send({ id });
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
 });
