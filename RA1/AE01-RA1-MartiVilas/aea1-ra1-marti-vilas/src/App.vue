@@ -3,9 +3,7 @@ import TaskApp from './components/TaskApp.vue'
 </script>
 
 <template>
-  <div class="app-container">
-    <TaskApp />
-  </div>
+  <TaskApp />
 </template>
 
 <style>
@@ -22,13 +20,5 @@ body {
     Helvetica,
     Arial,
     sans-serif;
-}
-
-.app-container {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem;
 }
 </style>
