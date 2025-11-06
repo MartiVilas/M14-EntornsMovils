@@ -1,8 +1,11 @@
 <script setup>
 import TaskItem from './TaskItem.vue'
 
-const emit = defineEmits(['toggle', 'remove'])
+const props = defineProps({
+  tasks: { type: Array, required: true, default: () => [] },
+})
 
+const emit = defineEmits(['toggle', 'remove'])
 const onToggle = (id) => emit('toggle', id)
 const onRemove = (id) => emit('remove', id)
 </script>
