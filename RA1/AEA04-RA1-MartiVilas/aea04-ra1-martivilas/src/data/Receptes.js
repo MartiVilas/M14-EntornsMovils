@@ -1,4 +1,4 @@
-export const Receptes = [
+const Receptes = [
   {
     id: 1,
     nom: 'Pasta Carbonara',
@@ -23,3 +23,5 @@ export const Receptes = [
     tempsPreparacio: '30 minuts',
   },
 ]
+
+export default Receptes
