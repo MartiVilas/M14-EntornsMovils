@@ -15,9 +15,9 @@ function selected() {
   <img width="100px" :src="`./img/${food.img}`" />
   <h2>{{ food.name }}</h2>
   <p>{{ food.type }}</p>
-  <ul>
+  <!-- <ul>
     <li v-for="p in food.properties">{{ p }}</li>
-  </ul>
+  </ul> -->
   <button @click="selected">Veure detall</button>
 </template>
 

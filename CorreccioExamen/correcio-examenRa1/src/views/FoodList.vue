@@ -37,7 +37,15 @@ function agafarSeleccionat(food) {
 <template>
   <h1>FoodList</h1>
   <FoodItem v-for="food in foodArray" :key="food.name" :food="food" @selected="agafarSeleccionat" />
-  <div v-if="elementSeleccionat"></div>
+  <div v-if="elementSeleccionat">
+    <h1>Food Item</h1>
+    <img width="100px" :src="`./img/${elementSeleccionat.img}`" />
+    <h2>{{ elementSeleccionat.name }}</h2>
+    <p>{{ elementSeleccionat.type }}</p>
+    <ul>
+      <li v-for="p in elementSeleccionat.properties">{{ p }}</li>
+    </ul>
+  </div>
 </template>
 
 <style scoped></style>
