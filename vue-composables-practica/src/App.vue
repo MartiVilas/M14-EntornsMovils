@@ -13,7 +13,7 @@ const { data, loading, error, fetchData } = useFetch(url)
     <div v-else-if="error">{{ error }}</div>
     <div v-else>
       <div v-if="data && data.meals">
-        <div v-for="meal in data.meals" key="meal.id">
+        <div v-for="meal in data.meals" :key="meal.id">
           <Meals
             :name="meal.strMeal"
             :area="meal.strArea"
