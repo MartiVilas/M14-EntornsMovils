@@ -1,7 +1,7 @@
 <script setup>
 import { defineProps } from 'vue'
 const props = defineProps({
-  id: Number,
+  id: String,
   name: String,
   ingredients: String,
   area: String,
@@ -13,9 +13,9 @@ const props = defineProps({
 <template>
   <div class="container">
     <h1>{{ props.name }}</h1>
-    <p>{{ props.catergory }} - {{ props.area }}</p>
+    <p>Principal ingredient: {{ props.catergory }} - Area: {{ props.area }}</p>
     <img :src="props.thumb" />
-    <RouterLink to="detall/">Veure detalls</RouterLink>
+    <RouterLink :to="`/detall/${props.id}`">Veure detalls</RouterLink>
   </div>
 </template>
 
