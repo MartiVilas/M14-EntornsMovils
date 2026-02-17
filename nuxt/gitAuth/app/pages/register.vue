@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import * as z from "zod";
 import type { FormSubmitEvent } from "@nuxt/ui";
-import { fetchError } from "ofetch";
+import { FetchError } from "ofetch";
 
 const schema = z.object({
   name: z.string(),
