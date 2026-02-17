@@ -22,9 +22,6 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  // Here you would normally save the user to the database
-  // For this example, we'll just return a success message
-
   await throwIfUserExists(email);
 
   const newUser = await registerUser(name, email, password);
