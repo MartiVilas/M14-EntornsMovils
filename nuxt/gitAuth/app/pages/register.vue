@@ -3,6 +3,7 @@ import * as z from "zod";
 import type { FormSubmitEvent } from "@nuxt/ui";
 
 const schema = z.object({
+  name: z.string(),
   email: z.string().email("Invalid email"),
   password: z.string().min(8, "Must be at least 8 characters"),
 });
@@ -10,6 +11,7 @@ const schema = z.object({
 type Schema = z.output<typeof schema>;
 
 const state = reactive<Partial<Schema>>({
+  name: undefined,
   email: undefined,
   password: undefined,
 });
