@@ -5,7 +5,7 @@ const { loggedIn, user, session, fetch, clear, openInPopup } = useUserSession();
 <template>
   <UCard class="flex justify-end">
     <div v-if="loggedIn" class="flex items-center gap-4">
-      <h1>Hola {{ user?.login }}!</h1>
+      <h1>Hola {{ user?.name }}!</h1>
       <UButton
         @click="
           clear();
