@@ -30,6 +30,11 @@ async function onSubmit(event) {
       title: 'Cuenta creada',
       description: 'Ya puedes empezar a guardar tus animes favoritos.'
     })
+    toast.add({
+  title: 'No se pudo crear la cuenta',
+  description: error?.data?.statusMessage || 'Revisa los datos e inténtalo otra vez',
+  color: 'error'
+})
 
     await navigateTo('/dashboard')
   } catch (error) {
