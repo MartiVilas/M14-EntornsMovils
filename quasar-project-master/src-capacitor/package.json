@@ -1,0 +1,13 @@
+{
+  "name": "quasar-project-vilas-marti",
+  "version": "0.0.1",
+  "description": "A Quasar Project",
+  "author": "Martí Vilàs",
+  "private": true,
+  "dependencies": {
+    "@capacitor/android": "^7.6.0",
+    "@capacitor/app": "^7.0.0",
+    "@capacitor/cli": "^7.0.0",
+    "@capacitor/core": "^7.0.0"
+  }
+}
