@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     session: {
       password: '',
       maxAge: 60 * 60 * 24 * 7
-    }
+    },
+    mobileTokenSecret: ''
   }
 })

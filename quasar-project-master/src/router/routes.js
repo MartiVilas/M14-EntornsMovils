@@ -1,17 +1,30 @@
 const routes = [
   {
+    path: '/login',
+    component: () => import('src/pages/LoginPage.vue'),
+    meta: { guestOnly: true }
+  },
+  {
+    path: '/register',
+    component: () => import('src/pages/RegisterPage.vue'),
+    meta: { guestOnly: true }
+  },
+  {
     path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+    component: () => import('src/layouts/MainLayout.vue'),
+    meta: { requiresAuth: true },
     children: [
-      { path: '', redirect: '/login' },
-      { path: 'login', component: () => import('pages/LoginPage.vue') },
-      { path: 'tasks', component: () => import('pages/TaskListPage.vue') },
-    ],
+      {
+        path: '',
+        name: 'anime-list',
+        component: () => import('src/pages/AnimeListPage.vue')
+      }
+    ]
   },
   {
     path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue'),
-  },
+    redirect: '/'
+  }
 ]
 
 export default routes

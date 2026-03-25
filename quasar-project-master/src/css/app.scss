@@ -1,1 +1,15 @@
-// app global css in SCSS form
+body {
+  background: #f6f7fb;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+}
+
+.anime-cover {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: 12px;
+}
