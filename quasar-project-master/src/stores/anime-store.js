@@ -1,40 +1,40 @@
 import { defineStore } from 'pinia'
-import { api } from 'boot/axios'
+import { api } from 'src/services/api'
 
-export const useTaskStore = defineStore('tasks', {
+export const useAnimeStore = defineStore('animes', {
   state: () => ({
     items: [],
-    isLoading: false,
+    isLoading: false
   }),
 
   actions: {
-    async fetchTasks() {
+    async fetchAnimes () {
       this.isLoading = true
       try {
-        const { data } = await api.get('/api/tasks')
-        this.items = Array.isArray(data) ? data : data.tasks || []
+        const data = await api.getAnimes()
+        this.items = Array.isArray(data) ? data : []
         return this.items
       } finally {
         this.isLoading = false
       }
     },
 
-    async createTask(payload) {
-      const { data } = await api.post('/api/tasks', payload)
-      await this.fetchTasks()
-      return data
+    async createAnime (payload) {
+      const created = await api.createAnime(payload)
+      await this.fetchAnimes()
+      return created
     },
 
-    async updateTask(id, payload) {
-      const { data } = await api.put(`/api/tasks/${id}`, payload)
-      await this.fetchTasks()
-      return data
+    async updateAnime (id, payload) {
+      const updated = await api.updateAnime(id, payload)
+      await this.fetchAnimes()
+      return updated
     },
 
-    async deleteTask(id) {
-      const { data } = await api.delete(`/api/tasks/${id}`)
-      this.items = this.items.filter((task) => task.id !== id)
-      return data
-    },
-  },
+    async deleteAnime (id) {
+      const result = await api.deleteAnime(id)
+      this.items = this.items.filter((anime) => anime.id !== id)
+      return result
+    }
+  }
 })
