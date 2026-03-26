@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 import { useQuasar } from 'quasar'
 import AnimeDialog from 'src/components/AnimeDialog.vue'
 import { api } from 'src/services/api'
-import { logoutUser } from 'src/stores/auth'
+import { logoutUser } from 'src/stores/auth-store'
 
 const $q = useQuasar()
 const loading = ref(false)

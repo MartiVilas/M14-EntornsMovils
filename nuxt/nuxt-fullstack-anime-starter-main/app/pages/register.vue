@@ -1,14 +1,17 @@
 <script setup>
-import { registerSchema } from '../../../shared/schemas/auth'
+import { z } from 'zod'
 
 const toast = useToast()
 const { loggedIn, ready, fetch: refreshSession } = useUserSession()
 
+const schema = z.object({
+  email: z.string().email('Introduce un email válido'),
+  password: z.string().min(6, 'La contraseña debe tener al menos 6 caracteres')
+})
+
 const state = reactive({
-  name: '',
   email: '',
-  password: '',
-  confirmPassword: ''
+  password: ''
 })
 
 watchEffect(() => {
@@ -19,7 +22,7 @@ watchEffect(() => {
 
 async function onSubmit(event) {
   try {
-    await $fetch('/api/register', {
+    await $fetch('/api/login', {
       method: 'POST',
       body: event.data
     })
@@ -27,23 +30,22 @@ async function onSubmit(event) {
     await refreshSession()
 
     toast.add({
-      title: 'Cuenta creada',
-      description: 'Ya puedes empezar a guardar tus animes favoritos.'
+      title: 'Sesión iniciada',
+      description: 'Bienvenido de nuevo a tu catálogo anime.'
     })
-    toast.add({
-  title: 'No se pudo crear la cuenta',
-  description: error?.data?.statusMessage || 'Revisa los datos e inténtalo otra vez',
-  color: 'error'
-})
 
     await navigateTo('/dashboard')
   } catch (error) {
     toast.add({
-      title: 'No se pudo crear la cuenta',
-      description: error?.data?.statusMessage || 'Revisa los datos e inténtalo otra vez',
+      title: 'Error de acceso',
+      description: 'Email o contraseña incorrectos',
       color: 'error'
     })
   }
+}
+
+function loginWithGithub() {
+  window.location.href = '/auth/github'
 }
 </script>
 
@@ -51,48 +53,73 @@ async function onSubmit(event) {
   <main class="min-h-screen bg-neutral-50 px-6 py-12">
     <div class="mx-auto max-w-md space-y-6">
       <div class="space-y-2 text-center">
-        <NuxtLink to="/" class="inline-flex text-sm font-medium text-primary hover:underline">
+        <NuxtLink
+          to="/"
+          class="inline-flex text-sm font-medium text-primary hover:underline"
+        >
           ← Volver al inicio
         </NuxtLink>
-        <h1 class="text-3xl font-bold">Crear cuenta</h1>
+        <h1 class="text-3xl font-bold">Iniciar sesión</h1>
         <p class="text-sm text-neutral-600">
-          Regístrate para crear tu biblioteca de anime privada.
+          Accede a tu dashboard y gestiona tu biblioteca de animes.
         </p>
       </div>
 
       <div class="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-        <UForm :schema="registerSchema" :state="state" class="space-y-4" @submit="onSubmit">
-          <UFormField label="Nombre" name="name">
-            <UInput v-model="state.name" placeholder="Tu nombre" class="w-full" />
-          </UFormField>
-
+        <UForm
+          :schema="schema"
+          :state="state"
+          class="space-y-4"
+          @submit="onSubmit"
+        >
           <UFormField label="Email" name="email">
-            <UInput v-model="state.email" type="email" placeholder="tu@email.com" class="w-full" />
+            <UInput
+              v-model="state.email"
+              type="email"
+              placeholder="tu@email.com"
+              class="w-full"
+            />
           </UFormField>
 
           <UFormField label="Contraseña" name="password">
-            <UInput v-model="state.password" type="password" placeholder="••••••••" class="w-full" />
-          </UFormField>
-
-          <UFormField label="Confirmar contraseña" name="confirmPassword">
             <UInput
-              v-model="state.confirmPassword"
+              v-model="state.password"
               type="password"
               placeholder="••••••••"
               class="w-full"
             />
           </UFormField>
 
-          <UButton type="submit" class="w-full justify-center" trailing-icon="i-lucide-user-plus">
-            Crear cuenta
-          </UButton>
+          <div class="flex flex-col gap-3 pt-2">
+            <UButton
+              type="submit"
+              class="w-full justify-center"
+              trailing-icon="i-lucide-log-in"
+            >
+              Entrar
+            </UButton>
+
+            <UButton
+              type="button"
+              color="neutral"
+              variant="outline"
+              icon="i-simple-icons-github"
+              class="w-full justify-center"
+              @click="loginWithGithub"
+            >
+              Entrar con GitHub
+            </UButton>
+          </div>
         </UForm>
       </div>
 
       <p class="text-center text-sm text-neutral-600">
-        ¿Ya tienes cuenta?
-        <NuxtLink to="/login" class="font-medium text-primary hover:underline">
-          Inicia sesión
+        ¿No tienes cuenta?
+        <NuxtLink
+          to="/register"
+          class="font-medium text-primary hover:underline"
+        >
+          Regístrate
         </NuxtLink>
       </p>
     </div>

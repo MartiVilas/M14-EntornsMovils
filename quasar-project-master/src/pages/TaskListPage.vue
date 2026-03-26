@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { useQuasar } from 'quasar'
 import TaskDialog from 'src/components/TaskDialog.vue'
-import { useTaskStore } from 'src/stores/task-store'
+import { useTaskStore } from 'src/stores/anime-store'
 
 const $q = useQuasar()
 const tasks = useTaskStore()

@@ -1,8 +1,6 @@
 {
-  "name": "quasar-project-vilas-marti",
-  "version": "0.0.1",
-  "description": "A Quasar Project",
-  "author": "Martí Vilàs",
+  "name": "quasar-anime-mobile",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@capacitor/android": "^7.6.0",

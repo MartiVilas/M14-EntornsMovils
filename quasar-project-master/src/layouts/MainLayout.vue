@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { authState, logoutUser } from 'src/stores/auth'
+import { authState, logoutUser } from 'src/stores/auth-store'
 
 const leftDrawerOpen = ref(false)
 const router = useRouter()

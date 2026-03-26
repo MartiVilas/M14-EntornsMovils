@@ -2,7 +2,7 @@
 import { reactive, ref } from 'vue'
 import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router'
-import { registerUser } from 'src/stores/auth'
+import { registerUser } from 'src/stores/auth-store'
 
 const $q = useQuasar()
 const router = useRouter()

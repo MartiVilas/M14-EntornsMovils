@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm'
-import { db } from "../db/index"
-import { users } from "../db/schema"
+import { db } from '../db/index'
+import { users } from '../db/schema'
 import { loginSchema } from '../../shared/schemas/auth'
 
 export default defineEventHandler(async (event) => {

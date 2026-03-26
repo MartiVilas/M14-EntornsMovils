@@ -15,6 +15,10 @@ export default defineConfig(() => {
 
     framework: {
       plugins: ['Notify', 'Dialog']
+    },
+
+    bin: {
+      linuxAndroidStudio: '/home/marti.vilas.7e7/Escriptori/DADES/MartiVilas/M14/android-studio/bin/studio.sh'
     }
 
   }
